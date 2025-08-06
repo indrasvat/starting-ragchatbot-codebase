@@ -18,10 +18,18 @@ This is the companion codebase for the DeepLearning.AI course: **"Claude Code: A
 
 ### Running the Application
 - **Quick start**: `./run.sh` (starts server on port 8000)
-- **Manual start**: `cd backend && uv run uvicorn app:app --reload --port 8000`
+- **Manual start**: `uv run uvicorn backend.app:app --reload --port 8000` (from root)
+- **Legacy method**: `cd backend && uv run uvicorn app:app --reload --port 8000`
 - **Access points**: 
   - Web interface: http://localhost:8000
   - API docs: http://localhost:8000/docs
+
+### AI Provider Configuration
+- **Default**: Direct Anthropic API (`ANTHROPIC_API_KEY` required)
+- **AWS Bedrock**: Set `AI_PROVIDER=bedrock` in .env file
+  - Auto-detects AWS credentials from profile/environment
+  - Uses Claude Sonnet 4 by default with sensible regional settings
+  - Minimal configuration required - just set provider type
 
 ### Python Environment
 - Uses `uv` package manager (not pip/conda)
@@ -53,8 +61,11 @@ All models defined in `models.py`:
 
 ### Key Configuration
 - **Config class** (`config.py`): Centralizes all settings including API keys, chunk sizes, and model parameters
-- **Environment**: Uses `.env` file for sensitive data like `ANTHROPIC_API_KEY`
-- **Model**: Currently uses `claude-sonnet-4-20250514`
+- **Environment**: Uses `.env` file for sensitive data and provider configuration
+- **AI Providers**: 
+  - Direct Anthropic: Uses `claude-sonnet-4-20250514` 
+  - AWS Bedrock: Uses `us.anthropic.claude-sonnet-4-20250514-v1:0` (inference profile)
+- **Factory Pattern**: `create_ai_generator()` automatically selects provider based on config
 
 ### Document Processing Flow
 1. Documents from `/docs/` folder are processed on startup
