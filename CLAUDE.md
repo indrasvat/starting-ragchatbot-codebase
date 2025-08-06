@@ -90,7 +90,20 @@ All models defined in `models.py`:
 7. **VectorStore** (`vector_store.py`): ChromaDB similarity search with filtering
 8. **Response Path**: Results → AI synthesis → Session storage → Frontend display
 
-![Query Flow Diagram](query-flow-diagram.png)
+### Query Flow Summary
+```
+User Input → FastAPI → RAGSystem → AIGenerator → Claude API
+    ↓
+Claude Decision: Search needed?
+    ↓                    ↓
+Course Search        General Knowledge
+    ↓                    ↓
+VectorStore → ChromaDB   Direct Response
+    ↓                    ↓
+Search Results ←────────⌘
+    ↓
+AI Synthesis → Session Storage → Frontend Response
+```
 
 The key architectural insight: **Intelligent tool usage** - Claude decides when to search course content vs. using general knowledge, demonstrating how AI assistants can make smart decisions about tool usage.
 
