@@ -88,3 +88,6 @@ The key architectural insight: **Intelligent tool usage** - Claude decides when 
 - Uses ChromaDB for persistence (stored in `./chroma_db/`)
 - Course content loaded from `/docs/` on application startup
 - All components follow dependency injection pattern through the config object
+
+## Commit Guidelines
+- Never include any Claude or bot specific verbiage in commit messages

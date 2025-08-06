@@ -21,11 +21,14 @@ class Config:
     AWS_ACCESS_KEY_ID: str = os.getenv("AWS_ACCESS_KEY_ID", "")  # For explicit creds
     AWS_SECRET_ACCESS_KEY: str = os.getenv("AWS_SECRET_ACCESS_KEY", "")
     
-    # Bedrock model mapping
+    # Bedrock model mapping (using inference profiles for latest models)
     BEDROCK_MODELS = {
-        "sonnet-4": "anthropic.claude-sonnet-4-20250514-v1:0",
-        "opus-4.1": "anthropic.claude-opus-4-1-20250805-v1:0", 
-        "haiku-3.5": "anthropic.claude-3-5-haiku-20241022-v1:0"
+        "sonnet-4": "us.anthropic.claude-sonnet-4-20250514-v1:0",
+        "opus-4.1": "us.anthropic.claude-opus-4-1-20250805-v1:0", 
+        "haiku-3.5": "anthropic.claude-3-5-haiku-20241022-v1:0",  # Direct model if available
+        # Fallback to working models
+        "claude-v2": "anthropic.claude-v2",
+        "claude-instant": "anthropic.claude-instant-v1"
     }
     BEDROCK_MODEL: str = os.getenv("BEDROCK_MODEL", "sonnet-4")
     
