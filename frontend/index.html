@@ -7,7 +7,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Course Materials Assistant</title>
-    <link rel="stylesheet" href="style.css?v=9">
+    <link rel="stylesheet" href="style.css?v=17">
 </head>
 <body>
     <div class="container">
@@ -17,8 +17,136 @@
         </header>
 
         <div class="main-content">
+            <!-- Mobile Menu Button -->
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+
+            <!-- Mobile Overlay -->
+            <div class="mobile-overlay" id="mobileOverlay">
+                <div class="mobile-sheet">
+                    <div class="mobile-sheet-header">
+                        <h3>Settings</h3>
+                        <button class="mobile-close-btn" id="mobileCloseBtn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="mobile-sheet-content">
+                        <!-- Theme Switcher -->
+                        <div class="mobile-section">
+                            <div class="mobile-section-header">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="5"/>
+                                    <line x1="12" y1="1" x2="12" y2="3"/>
+                                    <line x1="12" y1="21" x2="12" y2="23"/>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                                    <line x1="1" y1="12" x2="3" y2="12"/>
+                                    <line x1="21" y1="12" x2="23" y2="12"/>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                                </svg>
+                                <span>Theme</span>
+                            </div>
+                            <div class="theme-options">
+                                <button class="theme-option active" data-theme="default">
+                                    <div class="theme-preview default-preview"></div>
+                                    <span>Default</span>
+                                </button>
+                                <button class="theme-option" data-theme="terminal">
+                                    <div class="theme-preview terminal-preview"></div>
+                                    <span>Terminal</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Courses Section -->
+                        <div class="mobile-section">
+                            <details class="mobile-collapsible">
+                                <summary class="mobile-collapsible-header">
+                                    <span>Courses</span>
+                                    <svg class="mobile-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="9,18 15,12 9,6"></polyline>
+                                    </svg>
+                                </summary>
+                                <div class="mobile-collapsible-content">
+                                    <div class="course-stats" id="courseStatsMobile">
+                                        <div class="stat-item">
+                                            <span class="stat-label">Number of courses:</span>
+                                            <span class="stat-value" id="totalCoursesMobile">-</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <div class="course-titles" id="courseTitlesMobile">
+                                                <span class="loading">Loading...</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </details>
+                        </div>
+
+                        <!-- Try Asking Section -->
+                        <div class="mobile-section">
+                            <details class="mobile-collapsible">
+                                <summary class="mobile-collapsible-header">
+                                    <span>Try asking:</span>
+                                    <svg class="mobile-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="9,18 15,12 9,6"></polyline>
+                                    </svg>
+                                </summary>
+                                <div class="mobile-collapsible-content">
+                                    <div class="suggested-items">
+                                        <button class="suggested-item" data-question="What is the outline of the &quot;MCP: Build Rich-Context AI Apps with Anthropic&quot; course?">Outline of a course</button>
+                                        <button class="suggested-item" data-question="Are there any courses that include a Chatbot implementation?">Courses about Chatbot</button>
+                                        <button class="suggested-item" data-question="Are there any courses that explain what RAG is?">Courses explaining RAG</button>
+                                        <button class="suggested-item" data-question="What was covered in lesson 5 of the MCP course?">Details of a course's lesson</button>
+                                    </div>
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Left Sidebar -->
             <aside class="sidebar">
+                <!-- Theme Switcher -->
+                <div class="sidebar-section">
+                    <div class="theme-switcher">
+                        <div class="theme-switcher-header">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="5"/>
+                                <line x1="12" y1="1" x2="12" y2="3"/>
+                                <line x1="12" y1="21" x2="12" y2="23"/>
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                                <line x1="1" y1="12" x2="3" y2="12"/>
+                                <line x1="21" y1="12" x2="23" y2="12"/>
+                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                            </svg>
+                            <span>Theme</span>
+                        </div>
+                        <div class="theme-options">
+                            <button class="theme-option active" data-theme="default">
+                                <div class="theme-preview default-preview"></div>
+                                <span>Default</span>
+                            </button>
+                            <button class="theme-option" data-theme="terminal">
+                                <div class="theme-preview terminal-preview"></div>
+                                <span>Terminal</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Course Stats -->
                 <div class="sidebar-section">
                     <details class="stats-collapsible">
@@ -76,6 +204,6 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="script.js?v=9"></script>
+    <script src="script.js?v=17"></script>
 </body>
 </html>

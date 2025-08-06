@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
     createNewSession();
     loadCourseStats();
+    initializeTheme();
+    setupMobileMenu();
 });
 
 // Event Listeners
@@ -36,6 +38,14 @@ function setupEventListeners() {
             const question = e.target.getAttribute('data-question');
             chatInput.value = question;
             sendMessage();
+        });
+    });
+    
+    // Theme switcher
+    document.querySelectorAll('.theme-option').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const theme = e.currentTarget.getAttribute('data-theme');
+            setTheme(theme);
         });
     });
 }
@@ -189,3 +199,251 @@ async function loadCourseStats() {
         }
     }
 }
+
+// Theme Management Functions
+function initializeTheme() {
+    // Get saved theme from localStorage, default to 'default'
+    const savedTheme = localStorage.getItem('chat-theme') || 'default';
+    setTheme(savedTheme, false); // false = don't animate on initial load
+}
+
+function setTheme(themeName, animate = true) {
+    const html = document.documentElement;
+    const body = document.body;
+    
+    // Add theme-changing class to disable transitions temporarily if not animating
+    if (!animate) {
+        body.classList.add('theme-changing');
+    }
+    
+    // Set the theme data attribute
+    html.setAttribute('data-theme', themeName);
+    
+    // Update active state of theme buttons
+    document.querySelectorAll('.theme-option').forEach(button => {
+        button.classList.toggle('active', button.getAttribute('data-theme') === themeName);
+    });
+    
+    // Save theme preference
+    localStorage.setItem('chat-theme', themeName);
+    
+    // Add special terminal effects for terminal theme
+    if (themeName === 'terminal') {
+        addTerminalEffects();
+    } else {
+        removeTerminalEffects();
+    }
+    
+    // Remove theme-changing class after a short delay
+    if (!animate) {
+        setTimeout(() => {
+            body.classList.remove('theme-changing');
+        }, 50);
+    }
+    
+    // Dispatch custom event for theme change
+    window.dispatchEvent(new CustomEvent('themeChanged', { 
+        detail: { theme: themeName } 
+    }));
+}
+
+function addTerminalEffects() {
+    // Add terminal cursor effect to input
+    const chatInput = document.getElementById('chatInput');
+    if (chatInput) {
+        chatInput.style.caretColor = '#00ff41';
+    }
+    
+    // Add terminal typing sound effect simulation (visual feedback)
+    document.addEventListener('keydown', terminalKeyEffect);
+}
+
+function removeTerminalEffects() {
+    // Reset input cursor
+    const chatInput = document.getElementById('chatInput');
+    if (chatInput) {
+        chatInput.style.caretColor = '';
+    }
+    
+    // Remove terminal typing effect
+    document.removeEventListener('keydown', terminalKeyEffect);
+}
+
+function terminalKeyEffect(e) {
+    // Only apply to chat input
+    if (e.target.id === 'chatInput') {
+        // Create subtle glow effect on typing
+        const input = e.target;
+        input.style.textShadow = '0 0 10px currentColor';
+        
+        setTimeout(() => {
+            input.style.textShadow = '0 0 5px currentColor';
+        }, 100);
+    }
+}
+
+// Add keyboard shortcut for theme switching
+document.addEventListener('keydown', (e) => {
+    // Ctrl/Cmd + T to toggle themes
+    if ((e.ctrlKey || e.metaKey) && e.key === 't' && !e.target.matches('input, textarea')) {
+        e.preventDefault();
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'default';
+        const newTheme = currentTheme === 'default' ? 'terminal' : 'default';
+        setTheme(newTheme);
+    }
+});
+
+// Performance optimization: debounced theme change
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Export theme functions for potential external use
+window.themeManager = {
+    setTheme,
+    getCurrentTheme: () => document.documentElement.getAttribute('data-theme') || 'default',
+    getAvailableThemes: () => ['default', 'terminal']
+};
+
+// Mobile Menu Functions
+function setupMobileMenu() {
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileOverlay = document.getElementById('mobileOverlay');
+    const mobileCloseBtn = document.getElementById('mobileCloseBtn');
+    
+    // Load mobile course stats
+    loadMobileCourseStats();
+    
+    // Mobile menu event listeners
+    if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+    }
+    
+    if (mobileCloseBtn) {
+        mobileCloseBtn.addEventListener('click', hideMobileMenu);
+    }
+    
+    if (mobileOverlay) {
+        // Close on overlay click (not on sheet)
+        mobileOverlay.addEventListener('click', (e) => {
+            if (e.target === mobileOverlay) {
+                hideMobileMenu();
+            }
+        });
+    }
+    
+    // Setup mobile theme switcher event listeners
+    document.querySelectorAll('.mobile-sheet .theme-option').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const theme = e.currentTarget.getAttribute('data-theme');
+            setTheme(theme);
+            // Update mobile theme button states
+            updateMobileThemeButtons(theme);
+        });
+    });
+    
+    // Setup mobile suggested questions
+    document.querySelectorAll('.mobile-sheet .suggested-item').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const question = e.target.getAttribute('data-question');
+            chatInput.value = question;
+            hideMobileMenu();
+            sendMessage();
+        });
+    });
+}
+
+function toggleMobileMenu() {
+    const mobileOverlay = document.getElementById('mobileOverlay');
+    if (mobileOverlay) {
+        if (mobileOverlay.classList.contains('active')) {
+            hideMobileMenu();
+        } else {
+            showMobileMenu();
+        }
+    }
+}
+
+function showMobileMenu() {
+    const mobileOverlay = document.getElementById('mobileOverlay');
+    if (mobileOverlay) {
+        mobileOverlay.classList.add('active');
+        // Prevent body scroll when menu is open
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function hideMobileMenu() {
+    const mobileOverlay = document.getElementById('mobileOverlay');
+    if (mobileOverlay) {
+        mobileOverlay.classList.remove('active');
+        // Restore body scroll
+        document.body.style.overflow = '';
+    }
+}
+
+function updateMobileThemeButtons(currentTheme) {
+    document.querySelectorAll('.mobile-sheet .theme-option').forEach(button => {
+        button.classList.toggle('active', button.getAttribute('data-theme') === currentTheme);
+    });
+}
+
+// Load course statistics for mobile menu
+async function loadMobileCourseStats() {
+    try {
+        const response = await fetch(`${API_URL}/courses`);
+        if (!response.ok) throw new Error('Failed to load course stats');
+        
+        const data = await response.json();
+        
+        // Update mobile stats
+        const totalCoursesMobile = document.getElementById('totalCoursesMobile');
+        const courseTitlesMobile = document.getElementById('courseTitlesMobile');
+        
+        if (totalCoursesMobile) {
+            totalCoursesMobile.textContent = data.total_courses;
+        }
+        
+        if (courseTitlesMobile) {
+            if (data.course_titles && data.course_titles.length > 0) {
+                courseTitlesMobile.innerHTML = data.course_titles
+                    .map(title => `<div class="course-title-item">${title}</div>`)
+                    .join('');
+            } else {
+                courseTitlesMobile.innerHTML = '<span class="no-courses">No courses available</span>';
+            }
+        }
+        
+    } catch (error) {
+        console.error('Error loading mobile course stats:', error);
+        const totalCoursesMobile = document.getElementById('totalCoursesMobile');
+        const courseTitlesMobile = document.getElementById('courseTitlesMobile');
+        
+        if (totalCoursesMobile) {
+            totalCoursesMobile.textContent = '0';
+        }
+        if (courseTitlesMobile) {
+            courseTitlesMobile.innerHTML = '<span class="error">Failed to load courses</span>';
+        }
+    }
+}
+
+// Update mobile theme buttons when theme changes
+window.addEventListener('themeChanged', (e) => {
+    updateMobileThemeButtons(e.detail.theme);
+});
+
+// Handle escape key to close mobile menu
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        hideMobileMenu();
+    }
+});
