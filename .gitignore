@@ -13,9 +13,11 @@ __pycache__/
 venv/
 env/
 ENV/
+.venv/
 
 # ChromaDB
 backend/chroma_db/
+chroma_db/
 
 # Uploads
 uploads/
@@ -25,6 +27,22 @@ uploads/
 .idea/
 *.swp
 *.swo
+
+# Logs
+*.log
+server.log
+
+# Temporary files
+*.tmp
+*.temp
+.env.test
+.env.bedrock-test
+
+# Documentation artifacts
+query-flow*.png
+query-flow*.txt
+query-flow*.mmd
+pr-description.md
 
 # OS
 .DS_Store

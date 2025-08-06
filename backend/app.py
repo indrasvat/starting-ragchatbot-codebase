@@ -9,8 +9,8 @@ from pydantic import BaseModel
 from typing import List, Optional
 import os
 
-from config import config
-from rag_system import RAGSystem
+from backend.config import config
+from backend.rag_system import RAGSystem
 
 # Initialize FastAPI app
 app = FastAPI(title="Course Materials RAG System", root_path="")
@@ -88,7 +88,7 @@ async def get_course_stats():
 @app.on_event("startup")
 async def startup_event():
     """Load initial documents on startup"""
-    docs_path = "../docs"
+    docs_path = "docs"
     if os.path.exists(docs_path):
         print("Loading initial documents...")
         try:
@@ -116,4 +116,4 @@ class DevStaticFiles(StaticFiles):
     
     
 # Serve static files for the frontend
-app.mount("/", StaticFiles(directory="../frontend", html=True), name="static")
+app.mount("/", StaticFiles(directory="frontend", html=True), name="static")
